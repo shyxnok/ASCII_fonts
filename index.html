@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Figlet.js ASCII Art Generator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #fff;
+      margin-bottom: 10px;
+      text-shadow: 0 0 20px rgba(100, 200, 255, 0.5);
+    }
+
+    .subtitle {
+      color: #a0aec0;
+      font-size: 1.1rem;
+    }
+    .result-box::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
+      background: transparent;
+    }
+
+    .result-box::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 3px;
+    }
+
+    .result-box::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 3px;
+    }
+
+    .result-box::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    /* 滚动条交叉点样式 */
+    .result-box::-webkit-scrollbar-corner {
+      background: rgba(13, 13, 13, 0.9);
+    }
+    .main-content {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    @media (max-width: 900px) {
+      .controls {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      color: #a0aec0;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    input[type="text"],
+    select {
+      padding: 14px 20px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    input[type="text"]:focus,
+    select:focus {
+      border-color: #64c8ff;
+      box-shadow: 0 0 20px rgba(100, 200, 255, 0.3);
+    }
+
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23a0aec0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 15px center;
+      background-size: 20px;
+      cursor: pointer;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    button {
+      flex: 1;
+      padding: 14px 30px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .btn-generate {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+    }
+
+    .btn-generate:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-preview-all {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      border: none;
+    }
+
+    .btn-preview-all:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-clear {
+      background: rgba(255, 255, 255, 0.1);
+      color: #a0aec0;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-clear:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
+
+    .font-preview-section {
+      margin-top: 30px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .font-preview-item {
+      margin-bottom: 20px;
+      background: #0d0d0d;
+      border-radius: 12px;
+      padding: 15px 20px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .font-preview-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #a0aec0;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+    }
+
+    .font-preview-art {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 12px;
+      line-height: 1.4;
+      color: #00ff88;
+      white-space: pre;
+      overflow-x: auto;
+      max-height: 120px;
+      overflow-y: auto;
+    }
+
+    /* 自定义滚动条样式 */
+    .font-preview-art::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
+      background: transparent;
+    }
+
+    .font-preview-art::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 3px;
+    }
+
+    .font-preview-art::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 3px;
+    }
+
+    .font-preview-art::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    /* 滚动条交叉点样式 */
+    .font-preview-art::-webkit-scrollbar-corner {
+      background: rgba(13, 13, 13, 0.9);
+    }
+
+    .result-box {
+      background: #0d0d0d;
+      border-radius: 12px;
+      padding: 20px;
+      overflow-x: auto;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      max-height: 500px;
+      overflow-y: auto;
+    }
+
+    .result-box pre {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 12px;
+      line-height: 1.4;
+      color: #00ff88;
+      white-space: pre;      /* 保留换行符，但不自动换行 */
+      word-break: normal;
+      margin: 0;
+    }
+
+    .result-box.empty {
+      min-height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .result-box.empty pre {
+      color: #4a5568;
+      font-size: 1rem;
+      white-space: normal;
+      text-align: center;
+    }
+
+    .loading {
+      color: #64c8ff;
+      text-align: center;
+      padding: 40px;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      color: #a0aec0;
+      font-size: 0.85rem;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      color: #4a5568;
+      font-size: 0.9rem;
+    }
+
+    .footer a {
+      color: #64c8ff;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>ASCII Art Generator</h1>
+      <p class="subtitle">使用 Figlet.js 将文字转换为炫酷的 ASCII 艺术</p>
+    </header>
+
+    <div class="main-content">
+      <div class="controls">
+        <div class="control-group">
+          <label for="input-text">输入文字</label>
+          <input 
+            type="text" 
+            id="input-text" 
+            placeholder="输入你想要转换的文字..."
+            value="Hello World"
+          >
+        </div>
+
+        <div class="control-group">
+          <label for="font-select">选择字体</label>
+          <select id="font-select"></select>
+        </div>
+
+      </div>
+
+      <div class="btn-group">
+        <button class="btn-copy" id="btn-copy">复制</button>
+        <button class="btn-preview-all" id="btn-preview-all">测试全部字体</button>
+        <button class="btn-clear" id="btn-clear">清空</button>
+      </div>
+
+      <div class="result-box" id="result-box">
+        <pre>点击「生成艺术字」按钮开始创建 ASCII 艺术字</pre>
+      </div>
+
+      <div class="stats" id="stats" style="display: none;">
+        <span>字体: <span id="stat-font">Standard</span></span>
+        <span>字符数: <span id="stat-chars">0</span></span>
+        <span>行数: <span id="stat-lines">0</span></span>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <p>Powered by Figlet.js</p>
+    </footer>
+  </div>
+
+  <script src="figlet.js"></script>
+
+</body>
+</html>
