@@ -510,7 +510,7 @@
     }
 
     const figFonts = {};
-    const figDefaults = { font: 'Standard', fontPath: './fonts', fetchFontIfMissing: true };
+    const figDefaults = { font: 'ANSI Shadow', fontPath: './fonts', fetchFontIfMissing: true };
 
     const figlet = (() => {
       const api = {};
@@ -716,7 +716,7 @@
         const option = document.createElement('option');
         option.value = fontName;
         option.textContent = fontName;
-        if (fontName === 'Standard') {
+        if (fontName === 'ANSI Shadow') {
           option.selected = true;
         }
         fontSelect.appendChild(option);
