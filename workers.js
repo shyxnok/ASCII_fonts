@@ -581,7 +581,7 @@ async function loadFont(fontName) {
   if (figFonts[actualFontName]) {
     return figFonts[actualFontName].options;
   }
-  const fontUrl = `https://cdn.jsdelivr.net/gh/shyxnok/ASCII_fonts@1.1.0/fonts/${encodeURIComponent(actualFontName)}.flf`;
+  const fontUrl = `https://cdn.jsdelivr.net/gh/shyxnok/ASCII_fonts@1.1.1/fonts/${encodeURIComponent(actualFontName)}.flf`;
   const response = await fetch(fontUrl);
   if (!response.ok) throw new Error(`Failed to load font: ${response.status}`);
   const text = await response.text();
@@ -673,7 +673,7 @@ export default {
     // 根路径返回 index.html 页面
     if (path === '/') {
       try {
-        const response = await fetch(`https://cdn.jsdelivr.net/gh/shyxnok/ASCII_fonts@1.1.0/index.html?v=${Date.now()}`);
+        const response = await fetch("https://cdn.jsdelivr.net/gh/shyxnok/ASCII_fonts@1.1.1/index.html");
         if (!response.ok) throw new Error('Failed to load index.html');
         const html = await response.text();
         return new Response(html, {
@@ -690,25 +690,7 @@ export default {
       }
     }
 
-    // 返回 figlet.js 脚本
-    if (path === '/figlet.js') {
-      try {
-        const response = await fetch(`https://cdn.jsdelivr.net/gh/shyxnok/ASCII_fonts@1.1.0/figlet.js?v=${Date.now()}`);
-        if (!response.ok) throw new Error('Failed to load figlet.js');
-        const js = await response.text();
-        return new Response(js, {
-          headers: {
-            'Content-Type': 'application/javascript',
-            'Access-Control-Allow-Origin': '*',
-          },
-        });
-      } catch (error) {
-        return new Response(JSON.stringify({ error: 'Failed to load figlet.js' }), {
-          status: 500,
-          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-        });
-      }
-    }
+ 
 
     // API 文档页面
     if (path === '/api') {
