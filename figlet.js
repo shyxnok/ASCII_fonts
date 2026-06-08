@@ -697,7 +697,7 @@
     // 页面交互代码
     // ============================================
     document.addEventListener('DOMContentLoaded', async function() {
-      figlet.defaults({ fontPath: 'https://cdn.jsdelivr.net/npm/figlet/fonts' });
+      figlet.defaults({ fontPath: 'https://cdn.jsdelivr.net/gh/shyxnok/ASCII_fonts/fonts' });
 
       const inputText = document.getElementById('input-text');
       const fontSelect = document.getElementById('font-select');
