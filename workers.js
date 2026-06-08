@@ -675,19 +675,11 @@ export default {
       try {
         const response = await fetch('https://cdn.jsdelivr.net/gh/shyxnok/ASCII_fonts/index.html');
         if (!response.ok) throw new Error('Failed to load index.html');
-        let html = await response.text();
-        // 过滤掉 Cloudflare Insights 脚本
-        html = html.replace(/<script[^>]*cloudflareinsights[^>]*>[\s\S]*?<\/script>/gi, '');
+        const html = await response.text();
         return new Response(html, {
           headers: {
             'Content-Type': 'text/html',
             'Access-Control-Allow-Origin': '*',
-            'X-Robots-Tag': 'noindex',
-            'Permissions-Policy': 'interest-cohort=()',
-            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-            'cf-inject-beacon': 'false',
-            'X-Content-Type-Options': 'nosniff',
-            'Content-Security-Policy': "script-src 'self' 'unsafe-inline' 'unsafe-eval' cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; object-src 'none'; connect-src 'self';",
           },
         });
       } catch (error) {
