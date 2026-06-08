@@ -673,7 +673,7 @@ export default {
     // 根路径返回 index.html 页面
     if (path === '/') {
       try {
-        const response = await fetch('https://cdn.jsdelivr.net/gh/shyxnok/ASCII_fonts/index.html');
+        const response = await fetch(`https://cdn.jsdelivr.net/gh/shyxnok/ASCII_fonts/figlet.js?v=${Date.now()}`);
         if (!response.ok) throw new Error('Failed to load index.html');
         const html = await response.text();
         return new Response(html, {
