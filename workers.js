@@ -670,8 +670,28 @@ export default {
       }
     }
 
-    // 根路径返回使用说明
-    if (path === '/' || path === '/api') {
+    // 根路径返回 index.html 页面
+    if (path === '/') {
+      try {
+        const response = await fetch('https://cdn.jsdelivr.net/gh/shyxnok/ASCII_fonts/index.html');
+        if (!response.ok) throw new Error('Failed to load index.html');
+        const html = await response.text();
+        return new Response(html, {
+          headers: {
+            'Content-Type': 'text/html',
+            'Access-Control-Allow-Origin': '*',
+          },
+        });
+      } catch (error) {
+        return new Response(JSON.stringify({ error: 'Failed to load index.html' }), {
+          status: 500,
+          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+        });
+      }
+    }
+
+    // API 文档页面
+    if (path === '/api') {
       const usage = `
 ASCII Art Generator API
 =======================
@@ -681,8 +701,7 @@ ASCII Art Generator API
 1. 获取字体列表:
 GET /api/fonts
 
-2. 生成 ASCII 艺术字:
-GET /api/generate?text=Hello&font=ANSI%20Shadow
+2. 生成 ASCII 艺术字 (仅支持 POST):
 POST /api/generate
 {
   "text": "Hello",
