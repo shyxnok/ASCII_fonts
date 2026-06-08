@@ -615,20 +615,26 @@ export default {
       });
     }
 
-    // 生成 ASCII 艺术字
+    // 生成 ASCII 艺术字（仅支持 POST 方法）
     if (path === '/api/generate') {
       try {
         let text = '';
         let font = 'ANSI Shadow';
 
-        if (request.method === 'GET') {
-          text = url.searchParams.get('text') || '';
-          font = url.searchParams.get('font') || 'ANSI Shadow';
-        } else if (request.method === 'POST') {
-          const body = await request.json();
-          text = body.text || '';
-          font = body.font || 'ANSI Shadow';
+        if (request.method !== 'POST') {
+          return new Response(JSON.stringify({ error: '仅支持 POST 方法' }), {
+            status: 405,
+            headers: { 
+              'Content-Type': 'application/json', 
+              'Access-Control-Allow-Origin': '*',
+              'Allow': 'POST'
+            },
+          });
         }
+
+        const body = await request.json();
+        text = body.text || '';
+        font = body.font || 'ANSI Shadow';
 
         if (!text.trim()) {
           return new Response(JSON.stringify({ error: '请提供文字内容' }), {
