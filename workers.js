@@ -690,6 +690,26 @@ export default {
       }
     }
 
+    // 返回 figlet.js 脚本
+    if (path === '/figlet.js') {
+      try {
+        const response = await fetch('https://cdn.jsdelivr.net/gh/shyxnok/ASCII_fonts/figlet.js');
+        if (!response.ok) throw new Error('Failed to load figlet.js');
+        const js = await response.text();
+        return new Response(js, {
+          headers: {
+            'Content-Type': 'application/javascript',
+            'Access-Control-Allow-Origin': '*',
+          },
+        });
+      } catch (error) {
+        return new Response(JSON.stringify({ error: 'Failed to load figlet.js' }), {
+          status: 500,
+          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+        });
+      }
+    }
+
     // API 文档页面
     if (path === '/api') {
       const usage = `
