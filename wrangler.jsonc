@@ -3,7 +3,7 @@
   "name": "ascii-art-api",
   "compatibility_date": "2026-06-08",
   "observability": {
-    "enabled": true
+    "enabled": false
   },
   "main": "workers.js",
   "compatibility_flags": [
