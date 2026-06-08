@@ -741,8 +741,10 @@
           // 每批加载后等待一小段时间，避免占用太多网络带宽
           await new Promise(resolve => setTimeout(resolve, 100));
         }
-        console.log(`字体预加载完成！共加载 ${loadedCount} 个字体`);
-      })();
+       console.log("%c ASCII_fonts v" + '1.1' + " %c https://github.com/shyxnok/ASCII_fonts", "color: white; background: rgb(12, 128, 230); padding:5px 0;", "padding:4px;border:1px solid rgb(12, 128, 230);");
+       console.log("%c 字体预加载完成！共加载"+`${loadedCount}`+"个字体","color: white; background: rgba(36, 201, 166, 1); padding:5px 0;");
+ 
+    })();
 
       // 实时生成 ASCII 艺术字
       async function generateArt() {
