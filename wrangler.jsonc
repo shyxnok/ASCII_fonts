@@ -1,13 +1,11 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "fonts",
-  "compatibility_date": "2026-06-07",
+  "name": "ascii-art-api",
+  "compatibility_date": "2026-06-08",
   "observability": {
     "enabled": true
   },
-  "assets": {
-    "directory": "."
-  },
+  "main": "workers.js",
   "compatibility_flags": [
     "nodejs_compat"
   ]
